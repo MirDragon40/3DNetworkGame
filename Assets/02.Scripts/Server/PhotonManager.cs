@@ -87,29 +87,11 @@ public class PhotonManager : MonoBehaviourPunCallbacks   // PUN의 사양한 서
 
     }
 
-
-    public override void OnJoinRoomFailed(short returnCode, string message)
-    {
-        Debug.Log("OnJoinRoomFailed");
-        Debug.Log(message);
-    }
-
-    public override void OnJoinRandomFailed(short returnCode, string message)
-    {
-        Debug.Log("OnJoinRandomFailed!");
-        Debug.Log(message);
-    }
-
+    // 방 생성에 실패했을 때 호출되는 콜백 함수
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
-        Debug.Log("OnCreateRoomFailed");
+        Debug.Log("방 생성 실패!");
         Debug.Log(message);
-    }
-
-
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-    {
-        
     }
 }
 
