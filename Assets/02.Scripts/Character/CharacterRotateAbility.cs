@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterRotateAbility : MonoBehaviour
+public class CharacterRotateAbility : CharacterAbility
 {
     // 목표: 마우스 이동에 따라 카메라와 플레이어를 회전하고 싶다. 
     public Transform CameraRoot;

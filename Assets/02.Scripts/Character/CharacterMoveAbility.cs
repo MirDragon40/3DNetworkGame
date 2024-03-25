@@ -4,9 +4,9 @@ using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(CharacterController))]
-public class CharacterMoveAbility : MonoBehaviour
+public class CharacterMoveAbility : CharacterAbility
 {
-    public float MoveSpeed = 7;
+
     public float RunSpeed = 12;
 
     private float _gravity = -20f;  // 중력 변수
@@ -17,11 +17,14 @@ public class CharacterMoveAbility : MonoBehaviour
 
 
     // 목표: [W],[A],[S],[D] 및 방향키를 누르면 캐릭터를 그 방향으로 이동시키고 싶다.
+    private Character _owner;
+
 
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
         _animator = GetComponentInChildren<Animator>();
+        _owner = GetComponent<Character>();
     }
 
 
