@@ -5,14 +5,13 @@ using UnityEngine;
 public class CharacterRotateAbility : MonoBehaviour
 {
     // 목표: 마우스 이동에 따라 카메라와 플레이어를 회전하고 싶다. 
+    public Transform CameraRoot;
 
-    public float RotationSpeed = 200;
-    private float _mx = 0;
-    private float _my = 0;
+    public float RotationSpeed = 300;
+    private float _mx = 0;  // 누적할 X
+    private float _my = 0;  // 누적할 Y
 
-    private void Start()
-    {
-    }
+
 
     private void Update()
     {
@@ -24,10 +23,13 @@ public class CharacterRotateAbility : MonoBehaviour
         // 2. 회전 값을 마우스 입력에 따라 미리 누적한다.
         _mx += mouseX * RotationSpeed * Time.deltaTime;
         _my += mouseY * RotationSpeed * Time.deltaTime;
+        _my = Mathf.Clamp(_my, -90f, 90f);
 
         // 3. 카메라(3인칭)와 캐릭터를 회전 방향으로 회전시킨다. 
-        transform.eulerAngles = new Vector3(0f, _mx, 0);
-        transform.eulerAngles = new Vector3(0f, _my, 0);
+        transform.eulerAngles = new Vector3(0, _mx, 0);
+        CameraRoot.localEulerAngles = new Vector3(-_my, 0, 0);
+
         // 4. 시네머신
     }
+   
 }
