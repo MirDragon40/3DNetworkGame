@@ -23,6 +23,9 @@ public class PhotonManager : MonoBehaviourPunCallbacks   // PUN의 사양한 서
 
         // 4. 연결한다.
         PhotonNetwork.ConnectUsingSettings();
+
+        PhotonNetwork.SendRate = 50;
+        PhotonNetwork.SerializationRate = 30;
     }
 
     // 포톤 서버에 접속 후 호출되는 콜백 함수
@@ -36,6 +39,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks   // PUN의 사양한 서
     {
         Debug.Log("서버 연결 해제");
     }
+
     public override void OnConnectedToMaster()
     {
         Debug.Log("마스터 서버 접속 성공");
