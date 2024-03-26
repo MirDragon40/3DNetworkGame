@@ -15,8 +15,7 @@ public class CharacterAttackAbility : CharacterAbility
     // 준수 전략
     // - 기존의 클래스로 해결할 수 없다면 새로운 클래스를 구현
 
-
-
+    private CharacterMoveAbility _characterMove;
 
     private Animator _animator;
 
@@ -28,7 +27,7 @@ public class CharacterAttackAbility : CharacterAbility
     void Start()
     {
         _animator = GetComponentInChildren<Animator>();
-
+        _characterMove = GetComponent<CharacterMoveAbility>();
     }
 
     // Update is called once per frame
@@ -39,8 +38,16 @@ public class CharacterAttackAbility : CharacterAbility
         if (Input.GetMouseButtonDown(0) && _attackTimer >= CoolTime)
         {
             _attackTimer = 0f;
-
             _animator.SetTrigger($"Attack{UnityEngine.Random.Range(1, 4)}");
+
+            _characterMove.Stamina -= 20f;
+            Debug.Log($"Stamina: {_characterMove.Stamina}");
+
+            if (_characterMove.Stamina < 0)
+            {
+                _characterMove.Stamina = 0;
+            }
+
         }
     }
 
