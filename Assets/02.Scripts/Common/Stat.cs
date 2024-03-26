@@ -24,7 +24,7 @@ public class Stat   // public record Stat
     public float AttackConsumeStamina = 20f;
     public void Init()
     {
-        Health = MaxHealth;
+        Health  = MaxHealth;
         Stamina = MaxStamina;
     }
 }

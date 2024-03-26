@@ -10,7 +10,7 @@ public class UI_CharacterStat : MonoBehaviour
 
     public Character MyCharacter;
     public Slider HealthSliderUI;
-    public Slider StaminahSliderUI;
+    public Slider StaminaSliderUI;
 
     private void Awake()
     {
@@ -25,6 +25,6 @@ public class UI_CharacterStat : MonoBehaviour
         }
 
         HealthSliderUI.value = (float)MyCharacter.Stat.Health / MyCharacter.Stat.MaxHealth;
-
+        StaminaSliderUI.value = MyCharacter.Stat.Stamina / MyCharacter.Stat.MaxStamina;
     }
 }

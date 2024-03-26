@@ -1,7 +1,5 @@
 using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting.Dependencies.Sqlite;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -46,10 +44,11 @@ public class CharacterMoveAbility : CharacterAbility
 
         // 2. '캐릭터가 바라보는 방향'을 기준으로 방향을 설정한다.
         Vector3 dir = new Vector3(h, 0, v);
-        _animator.SetFloat("Move", dir.magnitude);
-
         dir.Normalize();
         dir = Camera.main.transform.TransformDirection(dir); // 글로벌 좌표계 (세상의 동서남북)
+
+
+        _animator.SetFloat("Move", dir.magnitude);
 
         // 3. 중력 적용하세요.
         dir.y = -1f;
@@ -71,10 +70,6 @@ public class CharacterMoveAbility : CharacterAbility
                 _owner.Stat.Stamina = _owner.Stat.MaxStamina;
             }
         }
-
-
-        _owner.Stat.Stamina = Mathf.Clamp(_owner.Stat.Stamina, 0, 100);
-        StaminaSliderUI.value = _owner.Stat.Stamina / _owner.Stat.MaxStamina;
 
         // 4. 이동속도에 따라 그 방향으로 이동한다.
         _characterController.Move(dir * (moveSpeed * Time.deltaTime));
