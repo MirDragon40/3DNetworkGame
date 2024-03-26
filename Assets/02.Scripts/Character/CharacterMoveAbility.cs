@@ -1,19 +1,15 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(CharacterController))]
 public class CharacterMoveAbility : CharacterAbility
 {
-
-    public float MoveSpeed;
-    public float RunSpeed = 12;
-    public float Stamina;
-    public float MaxStamina = 100f;
-    public float StaminaConsumeSpeed = 10f; // 초당 스태미나 소모량
-    public float StaminaChargeSpeed = 5f;   // 초당 스태미나 충전량
 
 
     private float _gravity = -20f;  // 중력 변수
@@ -21,25 +17,27 @@ public class CharacterMoveAbility : CharacterAbility
 
     private CharacterController _characterController;
     private Animator _animator;
-    
-    // 목표: [W],[A],[S],[D] 및 방향키를 누르면 캐릭터를 그 방향으로 이동시키고 싶다.
-    private Character _owner;
 
-    
-    private void Awake()
-    {
-        _characterController = GetComponent<CharacterController>();
-        _animator = GetComponentInChildren<Animator>();
-        _owner = GetComponent<Character>();
-    }
+    [Header("스태미나 슬라이더 UI")]
+    public Slider StaminaSliderUI;
+
+    // 목표: [W],[A],[S],[D] 및 방향키를 누르면 캐릭터를 그 방향으로 이동시키고 싶다.
+  
+
 
     private void Start()
     {
-        Stamina = MaxStamina;
+        _owner.Stat.Stamina = _owner.Stat.MaxStamina;
+        _characterController = GetComponent<CharacterController>();
+        _animator = GetComponent<Animator>();
     }
 
     private void Update()
     {
+        if(!_owner.PhotonView.IsMine)
+        {
+            return;
+        }
 
         // 순서
         // 1. 사용자의 키보드 입력을 받는다.
@@ -53,36 +51,34 @@ public class CharacterMoveAbility : CharacterAbility
         dir.Normalize();
         dir = Camera.main.transform.TransformDirection(dir); // 글로벌 좌표계 (세상의 동서남북)
 
+        // 3. 중력 적용하세요.
+        dir.y = -1f;
 
 
         // 과제 5. 스테미나 구현하기 
-        float speed = MoveSpeed;
-
-        if (Input.GetKey(KeyCode.LeftShift))
+        float moveSpeed = _owner.Stat.MoveSpeed;
+        if (Input.GetKey(KeyCode.LeftShift) && _owner.Stat.Stamina > 0)
         {
-            Stamina -= StaminaConsumeSpeed * Time.deltaTime;
-
-            if (Stamina > 0 )
-            {
-                speed = RunSpeed;
-                Debug.Log(speed);
-            }
+            moveSpeed = _owner.Stat.RunSpeed;
+            _owner.Stat.Stamina -= Time.deltaTime * _owner.Stat.RunConsumeStamina;
         }
         else
         {
-            Stamina += StaminaChargeSpeed * Time.deltaTime;
+            _owner.Stat.Stamina += Time.deltaTime * _owner.Stat.RunRecoveryStamina;
+
+            if (_owner.Stat.Stamina >= _owner.Stat.MaxStamina)
+            {
+                _owner.Stat.Stamina = _owner.Stat.MaxStamina;
+            }
         }
 
 
-        Stamina = Mathf.Clamp(Stamina, 0, 100);
-        //StaminaSliderUI.value = Stamina / MaxStamina; 
+        _owner.Stat.Stamina = Mathf.Clamp(_owner.Stat.Stamina, 0, 100);
+        StaminaSliderUI.value = _owner.Stat.Stamina / _owner.Stat.MaxStamina;
 
-        // 3. 이동속도에 따라 그 방향으로 이동한다.
-        _characterController.Move(dir * speed * Time.deltaTime);
+        // 4. 이동속도에 따라 그 방향으로 이동한다.
+        _characterController.Move(dir * (moveSpeed * Time.deltaTime));
 
-        // 4. 중력 적용하세요.
-        // 4. 중력 적용하세요.
-        dir.y = -1f;
 
 
     }

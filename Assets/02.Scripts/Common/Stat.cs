@@ -8,8 +8,23 @@ using UnityEngine;
 public class Stat   // public record Stat
 {
     public int Health;  // 처음 한번만 대입할때
-    public float MoveSpeed;
-    public float RotationSpeed;
-    public float AttackCoolTime;
+    public int MaxHealth;
 
+    public float Stamina;
+    public float MaxStamina = 100f;
+    public float RunConsumeStamina = 10f; // 초당 스태미나 소모량
+    public float RunRecoveryStamina = 5f;   // 초당 스태미나 충전량
+
+    public float MoveSpeed = 7;
+    public float RunSpeed = 12;
+
+    public float RotationSpeed;
+
+    public float AttackCoolTime = 1f;
+    public float AttackConsumeStamina = 20f;
+    public void Init()
+    {
+        Health = MaxHealth;
+        Stamina = MaxStamina;
+    }
 }
