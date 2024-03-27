@@ -4,8 +4,6 @@ using UnityEngine;
 
 public interface IDamaged
 {
-    public void Damaged(int damage)
-    {
-
-    }
+    public void Damaged(int damage);
+ 
 }

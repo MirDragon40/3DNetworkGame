@@ -28,7 +28,7 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged   // 인터페�
         }
 
     }
-
+   
 
     private void Update()
     {
@@ -68,9 +68,9 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged   // 인터페�
     }
 
     [PunRPC]
-    public void Damage(int damage)
+    public void Damaged(int damage)
     {
         Stat.Health -= damage;
     }
-       
+
 }

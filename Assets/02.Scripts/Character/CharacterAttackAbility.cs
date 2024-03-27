@@ -21,7 +21,7 @@ public class CharacterAttackAbility : CharacterAbility
 
     private float _attackTimer = 0;
 
-
+    public Collider WeaponCollider;
 
     void Start()
     {
@@ -45,6 +45,7 @@ public class CharacterAttackAbility : CharacterAbility
             _attackTimer = 0f;
 
             _owner.PhotonView.RPC(nameof(PlayAttackAnimation), RpcTarget.All, Random.Range(1, 4));
+
             // RpcTarget.All     : 모두에게
             // RpcTarget.Others  : 나 자신을 제외하고 모두에게
             // RpcTarget.Master  : 방장에게만
@@ -66,7 +67,7 @@ public class CharacterAttackAbility : CharacterAbility
         // 0: 개방 폐쇄 원칙 + 인터페이스
         // 수정에는 닫혀있고, 확장에는 열려있다.
         IDamaged damagedAbleObject = other.GetComponent<IDamaged>();
-
+        
         if (damagedAbleObject != null)
         {
             PhotonView photonView = other.GetComponent<PhotonView>();
@@ -76,5 +77,14 @@ public class CharacterAttackAbility : CharacterAbility
             }
             //damagedAbleObject.Damaged(_owner.Stat.Damage);
         }
+    }
+
+    public void ActiveCollider()
+    {
+        WeaponCollider.enabled = true;
+    }
+    public void InactiveCollider()
+    {
+        WeaponCollider.enabled = false;
     }
 }
