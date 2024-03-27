@@ -22,6 +22,7 @@ public class Stat   // public record Stat
 
     public float AttackCoolTime = 1f;
     public float AttackConsumeStamina = 20f;
+    public int Damage;
     public void Init()
     {
         Health  = MaxHealth;

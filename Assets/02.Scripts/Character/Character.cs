@@ -8,7 +8,7 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterRotateAbility))]
 [RequireComponent(typeof(CharacterAttackAbility))]
 
-public class Character : MonoBehaviour, IPunObservable   // 인터페이스: 약속
+public class Character : MonoBehaviour, IPunObservable, IDamaged   // 인터페이스: 약속, 접점
 {
     public PhotonView PhotonView { get; private set; }
     public Stat Stat;
@@ -67,4 +67,10 @@ public class Character : MonoBehaviour, IPunObservable   // 인터페이스: 약
         // info는 데이터의 송수신 성공/실패 여부에 대한 메시지가 담겨있다. 
     }
 
+    [PunRPC]
+    public void Damage(int damage)
+    {
+        Stat.Health -= damage;
+    }
+       
 }
