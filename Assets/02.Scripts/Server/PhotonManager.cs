@@ -18,7 +18,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks   // PUN의 사양한 서
         // <전체를 뒤엎을 변화>, <기능 수정, 추가>, <버그, 내부적 코드 수정>
 
         // 2. 닉네임을 설정한다. 
-        PhotonNetwork.NickName = $"정수빈_{UnityEngine.Random.Range(0, 100)}";
+        PhotonNetwork.NickName = $"Player_{UnityEngine.Random.Range(0, 100)}";
         // 3. 씬을 설정한다.
 
         // 4. 연결한다.

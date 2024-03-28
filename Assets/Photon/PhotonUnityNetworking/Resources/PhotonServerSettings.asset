@@ -42,6 +42,7 @@ MonoBehaviour:
   - PlayAttackAnimation
   - Damage
   - Damaged
+  - SpawnHitEffect
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -8,10 +8,18 @@ public class MinimapCamera : MonoBehaviour
     public float YDistance = 50f;  // 오프셋 적용 .
     private Vector3 _initialEulerAngles;  // 각도 회전할때 이용, 플레이어 위치에 맞게 회전
 
+    public static MinimapCamera Instance { get; private set; }
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     private void Start()
     {
         _initialEulerAngles = transform.eulerAngles;
     }
+
 
     private void LateUpdate()
     {

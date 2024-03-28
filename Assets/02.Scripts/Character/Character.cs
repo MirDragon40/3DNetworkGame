@@ -16,17 +16,19 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged   // 인터페�
     private Vector3 _receivedPosition;
     private Quaternion _receivedRotation;
 
+    private CinemachineImpulseSource _impulseSource;
+
     private void Awake()
     {
         Stat.Init();
 
         PhotonView = GetComponent<PhotonView>();
+        _impulseSource = GetComponent<CinemachineImpulseSource>();
 
         if (PhotonView.IsMine)
         {
             UI_CharacterStat.Instance.MyCharacter = this;
         }
-
     }
    
 
@@ -70,7 +72,11 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged   // 인터페�
     [PunRPC]
     public void Damaged(int damage)
     {
-        Stat.Health -= damage;
+        if (PhotonView.IsMine)
+        {
+            Stat.Health -= damage;
+            _impulseSource.GenerateImpulse(0.3f);
+        } 
     }
 
 }

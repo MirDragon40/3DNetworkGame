@@ -23,6 +23,6 @@ public class CharacterCanvasAbility : CharacterAbility
     {
         StaminaSliderUI.value = (float)_owner.Stat.Stamina / _owner.Stat.MaxStamina;
         HealthSliderUI.value = (float)_owner.Stat.Health / _owner.Stat.MaxHealth;
-
     }
+
 }

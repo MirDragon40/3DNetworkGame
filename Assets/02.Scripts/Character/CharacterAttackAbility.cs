@@ -23,6 +23,9 @@ public class CharacterAttackAbility : CharacterAbility
 
     public Collider WeaponCollider;
 
+    // 때린 애들을 기억해놓는 리스트
+    private List<IDamaged> _damagedList = new List<IDamaged>();
+
     void Start()
     {
         _animator = GetComponent<Animator>();
@@ -58,6 +61,7 @@ public class CharacterAttackAbility : CharacterAbility
         _animator.SetTrigger($"Attack{index}");
     }
 
+
     public void OnTriggerEnter(Collider other)
     {
         if (_owner.PhotonView.IsMine == false || other.transform == transform)
@@ -70,9 +74,18 @@ public class CharacterAttackAbility : CharacterAbility
         
         if (damagedAbleObject != null)
         {
+            // 내가 이미 때렸던 애라면 안때리겠다. 
+            if (_damagedList.Contains(damagedAbleObject))
+            {
+                return;
+            }
+
             PhotonView photonView = other.GetComponent<PhotonView>();
             if(photonView != null)
             {
+                // 피격 이펙트 생성
+                Vector3 hitPosition = (transform.position + other.transform.position) / 2f + new Vector3(0f,1f);
+                PhotonNetwork.Instantiate("HitEffect", other.transform.position, Quaternion.identity);
                 photonView.RPC("Damaged", RpcTarget.All, _owner.Stat.Damage);
             }
             //damagedAbleObject.Damaged(_owner.Stat.Damage);
@@ -82,9 +95,12 @@ public class CharacterAttackAbility : CharacterAbility
     public void ActiveCollider()
     {
         WeaponCollider.enabled = true;
+
     }
+
     public void InactiveCollider()
     {
         WeaponCollider.enabled = false;
+        _damagedList.Clear();
     }
 }
