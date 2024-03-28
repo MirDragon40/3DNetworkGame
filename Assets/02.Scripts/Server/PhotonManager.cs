@@ -4,11 +4,14 @@ using UnityEngine;
 // Photon API를 사용하기 위한 네임스페이스
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine.UIElements;
 
 // 역할: 포톤 서버 연결 관리자
 
 public class PhotonManager : MonoBehaviourPunCallbacks   // PUN의 사양한 서버 이벤트(콜백 함수)를 받는다.
 {
+    public List<Transform> spawnPoints;
+
     private void Start()
     {
         // 목적: 연결을 하고 싶다. 
@@ -89,7 +92,9 @@ public class PhotonManager : MonoBehaviourPunCallbacks   // PUN의 사양한 서
         Debug.Log($"RoomName: {PhotonNetwork.CurrentRoom.PlayerCount}");
         Debug.Log($"RoomName: {PhotonNetwork.CurrentRoom.MaxPlayers}");
 
-        PhotonNetwork.Instantiate(nameof(Character), Vector3.zero, Quaternion.identity);
+        int randomIndex = Random.Range(0, spawnPoints.Count);
+        Transform spawnPoint = spawnPoints[randomIndex];
+        PhotonNetwork.Instantiate(nameof(Character), spawnPoint.position, Quaternion.identity);
     }
 
     // 방 생성에 실패했을 때 호출되는 콜백 함수

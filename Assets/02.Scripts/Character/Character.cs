@@ -78,7 +78,8 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged   // 인터페�
     public void Damaged(int damage)
     {
         Stat.Health -= damage;
-        
+        GetComponent<CharacterShakeAbility>().Shake();
+
 
         if (PhotonView.IsMine)
         {
@@ -89,7 +90,6 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged   // 인터페�
                 float strength = 0.4f;
                 impulseSource.GenerateImpulseWithVelocity(UnityEngine.Random.insideUnitSphere.normalized * strength);
             }
-            GetComponent<CharacterShakeAbility>().Shake();
             UI_DamagedEffect.Instance.Show(0.5f);
 
             // 재사용성을 높이는 것: 
