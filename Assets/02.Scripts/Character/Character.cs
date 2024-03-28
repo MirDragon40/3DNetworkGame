@@ -3,6 +3,7 @@ using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(CharacterMoveAbility))]
 [RequireComponent(typeof(CharacterRotateAbility))]
@@ -18,6 +19,10 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged   // 인터페�
 
     private CinemachineImpulseSource _impulseSource;
 
+    private float ui_DamageImage_Coroutine = 0.5f;
+
+    
+
     private void Awake()
     {
         Stat.Init();
@@ -30,7 +35,6 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged   // 인터페�
             UI_CharacterStat.Instance.MyCharacter = this;
         }
     }
-   
 
     private void Update()
     {
@@ -72,11 +76,20 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged   // 인터페�
     [PunRPC]
     public void Damaged(int damage)
     {
+        Stat.Health -= damage;
+        
+
         if (PhotonView.IsMine)
         {
-            Stat.Health -= damage;
-            _impulseSource.GenerateImpulse(0.3f);
-        } 
-    }
+            // 카메라 흔들기 위해 Impulse를 발생시킨다.
+            CinemachineImpulseSource impulseSource;
+            if (TryGetComponent<CinemachineImpulseSource>(out impulseSource))
+            {
+                float strength = 0.4f;
+                impulseSource.GenerateImpulseWithVelocity(UnityEngine.Random.insideUnitSphere.normalized * strength);
+            }
 
+            UI_DamagedEffect.Instance.Show(0.5f);
+        }
+    }
 }
