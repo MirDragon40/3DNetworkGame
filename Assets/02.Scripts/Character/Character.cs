@@ -12,6 +12,7 @@ using UnityEngine.UI;
 
 public class Character : MonoBehaviour, IPunObservable, IDamaged   // 인터페이스: 약속, 접점
 {
+
     public PhotonView PhotonView { get; private set; }
     public Stat Stat;
 
@@ -20,9 +21,9 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged   // 인터페�
 
     private CinemachineImpulseSource _impulseSource;
 
-    private float ui_DamageImage_Coroutine = 0.5f;
+    private Animator _animator;
 
-    
+    private float ui_DamageImage_Coroutine = 0.5f;
 
     private void Awake()
     {
@@ -30,6 +31,8 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged   // 인터페�
 
         PhotonView = GetComponent<PhotonView>();
         _impulseSource = GetComponent<CinemachineImpulseSource>();
+        _animator = GetComponent<Animator>();
+
 
         if (PhotonView.IsMine)
         {
@@ -85,6 +88,7 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged   // 인터페�
         {
             // 카메라 흔들기 위해 Impulse를 발생시킨다.
             CinemachineImpulseSource impulseSource;
+
             if (TryGetComponent<CinemachineImpulseSource>(out impulseSource))
             {
                 float strength = 0.4f;
@@ -94,5 +98,33 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged   // 인터페�
 
             // 재사용성을 높이는 것: 
         }
+
+        if (Stat.Health <= 0)
+        {
+            DieMove();
+        }
+
     }
+
+    public void DieMove()
+    {
+        _animator.SetTrigger("Die");
+
+        GetComponent<CharacterMoveAbility>().enabled = false;
+        GetComponent<CharacterAttackAbility>().enabled = false;
+        GetComponent<CharacterRotateAbility>().enabled = false;
+
+        StartCoroutine(ReSpawn_Coroutine(0.1f));
+
+    }
+
+
+    private IEnumerator ReSpawn_Coroutine(float spawnTime)
+    {
+        Destroy(gameObject, 6f);
+        yield return new WaitForSeconds(spawnTime);
+
+        GetComponent<PhotonManager>().CharacterSpawn();
+    }
+
 }

@@ -1,11 +1,12 @@
 using Photon.Pun;
-
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(PhotonManager))]
 public class CharacterMoveAbility : CharacterAbility
 {
 
@@ -19,23 +20,25 @@ public class CharacterMoveAbility : CharacterAbility
     [Header("스태미나 슬라이더 UI")]
     public Slider StaminaSliderUI;
 
+
     // 목표: [W],[A],[S],[D] 및 방향키를 누르면 캐릭터를 그 방향으로 이동시키고 싶다.
-  
-
-
     private void Start()
     {
         _owner.Stat.Stamina = _owner.Stat.MaxStamina;
         _characterController = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
+
+
     }
 
     private void Update()
     {
-        if(!_owner.PhotonView.IsMine)
+        if (!_owner.PhotonView.IsMine)
         {
             return;
         }
+
+
 
         // 순서
         // 1. 사용자의 키보드 입력을 받는다.
@@ -77,6 +80,7 @@ public class CharacterMoveAbility : CharacterAbility
 
 
     }
+
 
 
 }

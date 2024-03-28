@@ -92,9 +92,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks   // PUN의 사양한 서
         Debug.Log($"RoomName: {PhotonNetwork.CurrentRoom.PlayerCount}");
         Debug.Log($"RoomName: {PhotonNetwork.CurrentRoom.MaxPlayers}");
 
-        int randomIndex = Random.Range(0, spawnPoints.Count);
-        Transform spawnPoint = spawnPoints[randomIndex];
-        PhotonNetwork.Instantiate(nameof(Character), spawnPoint.position, Quaternion.identity);
+        CharacterSpawn();
     }
 
     // 방 생성에 실패했을 때 호출되는 콜백 함수
@@ -103,5 +101,16 @@ public class PhotonManager : MonoBehaviourPunCallbacks   // PUN의 사양한 서
         Debug.Log("방 생성 실패!");
         Debug.Log(message);
     }
+
+    public void CharacterSpawn()
+    {
+
+        int randomIndex = Random.Range(0, spawnPoints.Count);
+        Transform spawnPoint = spawnPoints[randomIndex];
+        PhotonNetwork.Instantiate(nameof(Character), spawnPoint.position, Quaternion.identity);
+
+    }
+
+
 }
 

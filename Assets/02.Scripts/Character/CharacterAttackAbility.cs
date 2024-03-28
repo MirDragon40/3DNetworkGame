@@ -23,6 +23,7 @@ public class CharacterAttackAbility : CharacterAbility
 
     public Collider WeaponCollider;
 
+
     // 때린 애들을 기억해놓는 리스트
     private List<IDamaged> _damagedList = new List<IDamaged>();
 
@@ -88,7 +89,9 @@ public class CharacterAttackAbility : CharacterAbility
                 PhotonNetwork.Instantiate("HitEffect", other.transform.position, Quaternion.identity);
                 photonView.RPC("Damaged", RpcTarget.All, _owner.Stat.Damage);
             }
+
             //damagedAbleObject.Damaged(_owner.Stat.Damage);
+
         }
     }
 
