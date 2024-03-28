@@ -8,6 +8,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CharacterMoveAbility))]
 [RequireComponent(typeof(CharacterRotateAbility))]
 [RequireComponent(typeof(CharacterAttackAbility))]
+[RequireComponent(typeof(CharacterShakeAbility))]
 
 public class Character : MonoBehaviour, IPunObservable, IDamaged   // 인터페이스: 약속, 접점
 {
@@ -88,8 +89,10 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged   // 인터페�
                 float strength = 0.4f;
                 impulseSource.GenerateImpulseWithVelocity(UnityEngine.Random.insideUnitSphere.normalized * strength);
             }
-
+            GetComponent<CharacterShakeAbility>().Shake();
             UI_DamagedEffect.Instance.Show(0.5f);
+
+            // 재사용성을 높이는 것: 
         }
     }
 }
