@@ -611,8 +611,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TargetTransform: {fileID: 1246392158039309581}
-  Duration: 0.5
-  Strength: 0.3
+  Duration: 0.3
+  Strength: 0.1
 --- !u!114 &327165327216164639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -625,7 +625,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1e415b5cce73804490245bc20ab6213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnPoints: []
 --- !u!114 &9143051388925152442
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -10,7 +10,6 @@ using UnityEngine.UIElements;
 
 public class PhotonManager : MonoBehaviourPunCallbacks   // PUN의 사양한 서버 이벤트(콜백 함수)를 받는다.
 {
-    public List<Transform> spawnPoints;
 
     private void Start()
     {
@@ -102,14 +101,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks   // PUN의 사양한 서
     {
         Debug.Log("방 생성 실패!");
         Debug.Log(message);
-    }
-
-    public void CharacterSpawn()
-    {
-
-        int randomIndex = Random.Range(0, spawnPoints.Count);
-        Transform spawnPoint = spawnPoints[randomIndex];
-
     }
 
 
