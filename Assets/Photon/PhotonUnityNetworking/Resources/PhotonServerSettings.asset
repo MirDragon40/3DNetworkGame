@@ -43,6 +43,9 @@ MonoBehaviour:
   - Damage
   - Damaged
   - SpawnHitEffect
+  - Death
+  - PlayMotion
+  - Live
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

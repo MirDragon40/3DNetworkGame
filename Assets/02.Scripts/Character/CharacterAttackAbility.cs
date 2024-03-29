@@ -34,7 +34,7 @@ public class CharacterAttackAbility : CharacterAbility
 
     private void Update()
     {
-        if (!_owner.PhotonView.IsMine)
+        if (_owner.State == State.Death || !_owner.PhotonView.IsMine)
         {
             return;
         }
@@ -86,7 +86,7 @@ public class CharacterAttackAbility : CharacterAbility
             {
                 // 피격 이펙트 생성
                 Vector3 hitPosition = (transform.position + other.transform.position) / 2f + new Vector3(0f,1f);
-                PhotonNetwork.Instantiate("HitEffect", other.transform.position, Quaternion.identity);
+                PhotonNetwork.Instantiate("HitEffect", hitPosition, Quaternion.identity);
                 photonView.RPC("Damaged", RpcTarget.All, _owner.Stat.Damage);
             }
 

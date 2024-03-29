@@ -328,6 +328,7 @@ GameObject:
   - component: {fileID: -3519413398806335399}
   - component: {fileID: 4384483028629594255}
   - component: {fileID: 327165327216164639}
+  - component: {fileID: 9143051388925152442}
   m_Layer: 6
   m_Name: Character
   m_TagString: Untagged
@@ -518,7 +519,13 @@ MonoBehaviour:
     Name: Attack3
   - Type: 9
     SynchronizeType: 0
-    Name: Die
+    Name: Death
+  - Type: 9
+    SynchronizeType: 0
+    Name: Live
+  - Type: 9
+    SynchronizeType: 0
+    Name: Motion1
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0
@@ -619,6 +626,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPoints: []
+--- !u!114 &9143051388925152442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1354746558641763134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 907aedf7a1ca9284e9619d45293b2ecd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1471849779525954190
 GameObject:
   m_ObjectHideFlags: 0

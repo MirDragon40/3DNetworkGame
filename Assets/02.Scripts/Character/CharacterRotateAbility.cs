@@ -15,6 +15,7 @@ public class CharacterRotateAbility : CharacterAbility
     private void Start()
     {
         if (_owner.PhotonView.IsMine)
+             
         {
             GameObject.FindWithTag("FollowCamera").GetComponent<CinemachineVirtualCamera>().Follow = CameraRoot;
             MinimapCamera.Instance.Target = transform;
@@ -46,4 +47,9 @@ public class CharacterRotateAbility : CharacterAbility
         // 4. 시네머신
     }
    
+    public void SetRandomRotation()
+    {
+        _mx = UnityEngine.Random.Range(0,360);
+        _my = 0;
+    }
 }

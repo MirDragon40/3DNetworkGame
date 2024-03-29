@@ -15,6 +15,7 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged   // 인터페�
 
     public PhotonView PhotonView { get; private set; }
     public Stat Stat;
+    public State State { get; private set; } = State.Live;
 
     private Vector3 _receivedPosition;
     private Quaternion _receivedRotation;
@@ -23,7 +24,7 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged   // 인터페�
 
     private Animator _animator;
 
-    private float ui_DamageImage_Coroutine = 0.5f;
+
 
     private void Awake()
     {
@@ -44,9 +45,10 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged   // 인터페�
     {
         if (!PhotonView.IsMine)
         {
+            // Photon Transform View 가 없다면 이 코드가 들어가야 내 캐릭터가 다른 플레이어의 화면에서도 움직인다. 
             transform.position = Vector3.Lerp(transform.position, _receivedPosition, Time.deltaTime * 20f);
             transform.rotation = Quaternion.Slerp(transform.rotation, _receivedRotation, Time.deltaTime * 20f);
-            
+
 
         }
     }
@@ -60,15 +62,15 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged   // 인터페�
             stream.SendNext(transform.rotation);
             stream.SendNext(Stat.Health);
             stream.SendNext(Stat.Stamina);
-                
+
         }
         else if (stream.IsReading)  // 데이터를 수신하는 상황
         {
             // 데이터를 전송한 순서와 똑같이 받은 데이터를 캐스팅해야된다.
-            _receivedPosition     = (Vector3)stream.ReceiveNext();
+            _receivedPosition = (Vector3)stream.ReceiveNext();
             _receivedRotation = (Quaternion)stream.ReceiveNext();
 
-          if (!PhotonView.IsMine)
+            if (!PhotonView.IsMine)
             {
                 Stat.Health = (int)stream.ReceiveNext();
                 Stat.Stamina = (float)stream.ReceiveNext();
@@ -80,51 +82,90 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged   // 인터페�
     [PunRPC]
     public void Damaged(int damage)
     {
+        if (State == State.Death)
+        {
+            return;   // 체력이 0일때 데미지를 입으면 아무것도 실행하지 않는다.
+        }
         Stat.Health -= damage;
+        if (Stat.Health <= 0)
+        {
+            PhotonView.RPC(nameof(Death), RpcTarget.All);
+        }
+
         GetComponent<CharacterShakeAbility>().Shake();
 
 
         if (PhotonView.IsMine)
         {
-            // 카메라 흔들기 위해 Impulse를 발생시킨다.
-            CinemachineImpulseSource impulseSource;
-
-            if (TryGetComponent<CinemachineImpulseSource>(out impulseSource))
-            {
-                float strength = 0.4f;
-                impulseSource.GenerateImpulseWithVelocity(UnityEngine.Random.insideUnitSphere.normalized * strength);
-            }
-            UI_DamagedEffect.Instance.Show(0.5f);
-
-            // 재사용성을 높이는 것: 
+            OnDamagedMine();  // 자신이 데미지를 입었을 때
         }
 
-        if (Stat.Health <= 0)
+    }
+
+    private void OnDamagedMine()
+    {
+        // 카메라 흔들기 위해 Impulse를 발생시킨다.
+        CinemachineImpulseSource impulseSource;
+
+        if (TryGetComponent<CinemachineImpulseSource>(out impulseSource))
         {
-            DieMove();
+            float strength = 0.4f;
+            impulseSource.GenerateImpulseWithVelocity(UnityEngine.Random.insideUnitSphere.normalized * strength);
         }
+        UI_DamagedEffect.Instance.Show(0.5f);
+
+        // 재사용성을 높이는 것: 
 
     }
 
-    public void DieMove()
+    [PunRPC]
+    private void Death()
     {
-        _animator.SetTrigger("Die");
+        State = State.Death;
 
-        GetComponent<CharacterMoveAbility>().enabled = false;
-        GetComponent<CharacterAttackAbility>().enabled = false;
-        GetComponent<CharacterRotateAbility>().enabled = false;
+        GetComponent<Animator>().SetTrigger("Death");
+        GetComponent<CharacterAttackAbility>().InactiveCollider();
 
-        StartCoroutine(ReSpawn_Coroutine(0.1f));
-
+        // 죽고나서 5초후 리스폰
+        if (PhotonView.IsMine)
+        {
+            StartCoroutine(Death_Coroutine());
+        }
     }
 
-
-    private IEnumerator ReSpawn_Coroutine(float spawnTime)
+    private IEnumerator Death_Coroutine()
     {
-        Destroy(gameObject, 6f);
-        yield return new WaitForSeconds(spawnTime);
+        yield return new WaitForSeconds(5f);
 
-        GetComponent<PhotonManager>().CharacterSpawn();
+        SetRandomPositionAndRotation();
+
+        PhotonView.RPC(nameof(Live), RpcTarget.All);
+
     }
 
+    [PunRPC]
+    private void Live()
+    {
+        State = State.Live;
+
+        Stat.Init();
+
+        GetComponent<Animator>().SetTrigger("Live");
+
+
+    }
+
+    private void Start()
+    {
+        SetRandomPositionAndRotation();
+    }
+
+    private void SetRandomPositionAndRotation()
+    {
+        Vector3 spawnPoint = BattleScene.Instance.GetRandomSpawnPoint();
+        GetComponent<CharacterMoveAbility>().Teleport(spawnPoint);
+        GetComponent<CharacterRotateAbility>().SetRandomRotation();
+
+    }
 }
+

@@ -92,7 +92,9 @@ public class PhotonManager : MonoBehaviourPunCallbacks   // PUN의 사양한 서
         Debug.Log($"RoomName: {PhotonNetwork.CurrentRoom.PlayerCount}");
         Debug.Log($"RoomName: {PhotonNetwork.CurrentRoom.MaxPlayers}");
 
-        CharacterSpawn();
+        Vector3 randomAngle = new Vector3(0, UnityEngine.Random.Range(0, 360), 0);
+        PhotonNetwork.Instantiate(nameof(Character), Vector3.zero, Quaternion.identity);
+
     }
 
     // 방 생성에 실패했을 때 호출되는 콜백 함수
@@ -107,7 +109,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks   // PUN의 사양한 서
 
         int randomIndex = Random.Range(0, spawnPoints.Count);
         Transform spawnPoint = spawnPoints[randomIndex];
-        PhotonNetwork.Instantiate(nameof(Character), spawnPoint.position, Quaternion.identity);
 
     }
 

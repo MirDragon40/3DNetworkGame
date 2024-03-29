@@ -33,7 +33,7 @@ public class CharacterMoveAbility : CharacterAbility
 
     private void Update()
     {
-        if (!_owner.PhotonView.IsMine)
+        if (_owner.State == State.Death || !_owner.PhotonView.IsMine)
         {
             return;
         }
@@ -78,9 +78,14 @@ public class CharacterMoveAbility : CharacterAbility
         _characterController.Move(dir * (moveSpeed * Time.deltaTime));
 
 
-
     }
 
 
-
+    public void Teleport(Vector3 position)
+    {
+        _characterController.enabled = false;
+        transform.position = position;
+        _characterController.enabled = true;
+        
+    }
 }

@@ -8,7 +8,7 @@ using UnityEngine;
 public class Stat   // public record Stat
 {
     public int Health;  // 처음 한번만 대입할때
-    public int MaxHealth;
+    public int MaxHealth = 100;
 
     public float Stamina;
     public float MaxStamina = 100f;
