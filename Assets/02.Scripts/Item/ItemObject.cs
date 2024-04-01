@@ -1,12 +1,10 @@
-using Photon.Pun;
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 [RequireComponent(typeof(PhotonView))]
 [RequireComponent(typeof(Collider))]
-public class ItemObject : MonoBehaviour
+public class ItemObject : MonoBehaviourPun
 {
     [Header("아이템 타입")]
     public ItemType ItemType;
@@ -27,15 +25,26 @@ public class ItemObject : MonoBehaviour
                 case ItemType.HealthPotion:
                 {
                     character.Stat.Health += (int)Value;
+                    if (character.Stat.Health >= character.Stat.MaxHealth)
+                    {
+                        character.Stat.Health = character.Stat.MaxHealth;
+                    }
                     break;
                 }
+
                 case ItemType.StaminaPotion:
                 {
                     character.Stat.Stamina += Value;
+                    if (character.Stat.Stamina > character.Stat.MaxStamina)
+                    {
+                        character.Stat.Stamina = character.Stat.MaxStamina;
+                    }
                     break;
                 }
             }
+
+            gameObject.SetActive(false);
+            ItemObjectFactory.Instance.RequestDelete(photonView.ViewID);
         }
     }
-
 }
