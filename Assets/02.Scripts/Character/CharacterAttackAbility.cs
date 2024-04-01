@@ -45,13 +45,22 @@ public class CharacterAttackAbility : CharacterAbility
         _attackTimer += Time.deltaTime;
 
         bool haveStamina = _owner.Stat.Stamina >= _owner.Stat.AttackConsumeStamina;
-        if (Input.GetMouseButtonDown(0) && _attackTimer >= _owner.Stat.AttackCoolTime && haveStamina  && _characterController.isGrounded)
+        if (Input.GetMouseButtonDown(0) && _attackTimer >= _owner.Stat.AttackCoolTime && haveStamina )
         {
             _owner.Stat.Stamina -= _owner.Stat.AttackConsumeStamina;
 
             _attackTimer = 0f;
 
-            _owner.PhotonView.RPC(nameof(PlayAttackAnimation), RpcTarget.All, Random.Range(1, 4));
+            if (GetComponent<CharacterMoveAbility>().IsJumping)
+            {
+                _owner.PhotonView.RPC(nameof(PlayAttackAnimation), RpcTarget.All, 4);
+            }
+            else
+            {
+                _owner.PhotonView.RPC(nameof(PlayAttackAnimation), RpcTarget.All, Random.Range(1, 4));
+            }
+
+
 
             // RpcTarget.All     : 모두에게
             // RpcTarget.Others  : 나 자신을 제외하고 모두에게

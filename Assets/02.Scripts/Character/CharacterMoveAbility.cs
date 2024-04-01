@@ -20,6 +20,7 @@ public class CharacterMoveAbility : CharacterAbility
     [Header("스태미나 슬라이더 UI")]
     public Slider StaminaSliderUI;
 
+    public bool IsJumping => !_characterController.isGrounded;
 
     // 목표: [W],[A],[S],[D] 및 방향키를 누르면 캐릭터를 그 방향으로 이동시키고 싶다.
     private void Start()
