@@ -14,9 +14,11 @@ public class Stat   // public record Stat
     public float MaxStamina = 100f;
     public float RunConsumeStamina = 10f; // 초당 스태미나 소모량
     public float RunRecoveryStamina = 5f;   // 초당 스태미나 충전량
+    public float JumpConsumeStamina = 20f;
 
     public float MoveSpeed = 7;
     public float RunSpeed = 12;
+    public float JumpPower = 7f;
 
     public float RotationSpeed;
 

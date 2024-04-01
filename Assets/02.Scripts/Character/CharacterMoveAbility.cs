@@ -11,8 +11,8 @@ public class CharacterMoveAbility : CharacterAbility
 {
 
 
-    private float _gravity = -20f;  // 중력 변수
-    private float _yVelocity = 0f;
+    private float _gravity = -9.8f;  // 중력 변수
+    private float _yVelocity = -1f;
 
     private CharacterController _characterController;
     private Animator _animator;
@@ -28,7 +28,6 @@ public class CharacterMoveAbility : CharacterAbility
         _characterController = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
 
-
     }
 
     private void Update()
@@ -38,7 +37,14 @@ public class CharacterMoveAbility : CharacterAbility
             return;
         }
 
-
+        bool haveJumpStamina = _owner.Stat.Stamina >= _owner.Stat.JumpConsumeStamina;
+        if (_characterController.isGrounded && Input.GetKeyDown(KeyCode.Space) && haveJumpStamina)
+        {
+            _yVelocity = _owner.Stat.JumpPower;
+            _owner.Stat.Stamina -= _owner.Stat.JumpConsumeStamina;
+            
+        }
+        
 
         // 순서
         // 1. 사용자의 키보드 입력을 받는다.
@@ -53,8 +59,11 @@ public class CharacterMoveAbility : CharacterAbility
 
         _animator.SetFloat("Move", dir.magnitude);
 
+
+
         // 3. 중력 적용하세요.
-        dir.y = -1f;
+        _yVelocity += _gravity * Time.deltaTime;
+        dir.y = _yVelocity;
 
 
         // 과제 5. 스테미나 구현하기 
@@ -76,7 +85,6 @@ public class CharacterMoveAbility : CharacterAbility
 
         // 4. 이동속도에 따라 그 방향으로 이동한다.
         _characterController.Move(dir * (moveSpeed * Time.deltaTime));
-
 
     }
 

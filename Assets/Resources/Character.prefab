@@ -460,8 +460,10 @@ MonoBehaviour:
     MaxStamina: 100
     RunConsumeStamina: 10
     RunRecoveryStamina: 20
+    JumpConsumeStamina: 20
     MoveSpeed: 7
     RunSpeed: 12
+    JumpPower: 3
     RotationSpeed: 200
     AttackCoolTime: 0.3
     AttackConsumeStamina: 20
@@ -526,6 +528,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 0
     Name: Motion1
+  - Type: 9
+    SynchronizeType: 0
+    Name: Attack4
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0

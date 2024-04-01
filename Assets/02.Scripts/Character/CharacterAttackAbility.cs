@@ -23,6 +23,8 @@ public class CharacterAttackAbility : CharacterAbility
 
     public Collider WeaponCollider;
 
+    private CharacterController _characterController;
+
 
     // 때린 애들을 기억해놓는 리스트
     private List<IDamaged> _damagedList = new List<IDamaged>();
@@ -30,6 +32,7 @@ public class CharacterAttackAbility : CharacterAbility
     void Start()
     {
         _animator = GetComponent<Animator>();
+        _characterController = GetComponent<CharacterController>();
     }
 
     private void Update()
@@ -42,7 +45,7 @@ public class CharacterAttackAbility : CharacterAbility
         _attackTimer += Time.deltaTime;
 
         bool haveStamina = _owner.Stat.Stamina >= _owner.Stat.AttackConsumeStamina;
-        if (Input.GetMouseButtonDown(0) && _attackTimer >= _owner.Stat.AttackCoolTime && haveStamina)
+        if (Input.GetMouseButtonDown(0) && _attackTimer >= _owner.Stat.AttackCoolTime && haveStamina  && _characterController.isGrounded)
         {
             _owner.Stat.Stamina -= _owner.Stat.AttackConsumeStamina;
 
@@ -54,6 +57,13 @@ public class CharacterAttackAbility : CharacterAbility
             // RpcTarget.Others  : 나 자신을 제외하고 모두에게
             // RpcTarget.Master  : 방장에게만
         }
+        else if (!_characterController.isGrounded && _attackTimer >= _owner.Stat.AttackCoolTime && haveStamina)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                _animator.SetTrigger("Attack4");
+            }
+        }
     }
 
     [PunRPC]
@@ -61,6 +71,8 @@ public class CharacterAttackAbility : CharacterAbility
     {
         _animator.SetTrigger($"Attack{index}");
     }
+
+    
 
 
     public void OnTriggerEnter(Collider other)
