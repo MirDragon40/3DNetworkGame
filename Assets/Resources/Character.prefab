@@ -463,7 +463,7 @@ MonoBehaviour:
     JumpConsumeStamina: 20
     MoveSpeed: 7
     RunSpeed: 12
-    JumpPower: 3
+    JumpPower: 4
     RotationSpeed: 200
     AttackCoolTime: 0.3
     AttackConsumeStamina: 20
