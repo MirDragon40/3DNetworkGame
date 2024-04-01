@@ -66,13 +66,7 @@ public class CharacterAttackAbility : CharacterAbility
             // RpcTarget.Others  : 나 자신을 제외하고 모두에게
             // RpcTarget.Master  : 방장에게만
         }
-        else if (!_characterController.isGrounded && _attackTimer >= _owner.Stat.AttackCoolTime && haveStamina)
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                _animator.SetTrigger("Attack4");
-            }
-        }
+       
     }
 
     [PunRPC]

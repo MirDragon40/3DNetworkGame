@@ -38,14 +38,7 @@ public class CharacterMoveAbility : CharacterAbility
             return;
         }
 
-        bool haveJumpStamina = _owner.Stat.Stamina >= _owner.Stat.JumpConsumeStamina;
-        if (_characterController.isGrounded && Input.GetKeyDown(KeyCode.Space) && haveJumpStamina)
-        {
-            _yVelocity = _owner.Stat.JumpPower;
-            _owner.Stat.Stamina -= _owner.Stat.JumpConsumeStamina;
-            
-        }
-        
+       
 
         // 순서
         // 1. 사용자의 키보드 입력을 받는다.
@@ -87,6 +80,14 @@ public class CharacterMoveAbility : CharacterAbility
         // 4. 이동속도에 따라 그 방향으로 이동한다.
         _characterController.Move(dir * (moveSpeed * Time.deltaTime));
 
+        // 5. 점프 적용하기
+        bool haveJumpStamina = _owner.Stat.Stamina >= _owner.Stat.JumpConsumeStamina;
+        if (_characterController.isGrounded && Input.GetKeyDown(KeyCode.Space) && haveJumpStamina)
+        {
+            _yVelocity = _owner.Stat.JumpPower;
+            _owner.Stat.Stamina -= _owner.Stat.JumpConsumeStamina;
+
+        }
     }
 
 
