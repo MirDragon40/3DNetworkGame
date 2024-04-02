@@ -17,6 +17,10 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged
     private Vector3 _receivedPosition;
     private Quaternion _receivedRotation;
 
+    public int Score;
+
+
+
     private void Awake()
     {
         Stat.Init();
@@ -53,6 +57,7 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged
             //stream.SendNext(transform.rotation);
             stream.SendNext(Stat.Health);
             stream.SendNext(Stat.Stamina);
+            stream.SendNext(Score);
         }
         else if (stream.IsReading) // 데이터를 수신하는 상황
         {
@@ -64,6 +69,7 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged
             {
                 Stat.Health = (int)stream.ReceiveNext();
                 Stat.Stamina = (float)stream.ReceiveNext();
+                Score = (int)stream.ReceiveNext();
 
             }
         }

@@ -9,6 +9,7 @@ public class ItemObject : MonoBehaviourPun
     [Header("아이템 타입")]
     public ItemType ItemType;
     public float Value = 100;
+    public float GetPoint = 1;
 
     private void OnTriggerEnter(Collider other)
     {
