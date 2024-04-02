@@ -15,7 +15,7 @@ public class CharacterCanvasAbility : CharacterAbility
     // Start is called before the first frame update
     void Start()
     {
-        NicknameTextUI.text = _owner.PhotonView.Controller.NickName;
+        NicknameTextUI.text = _owner.PhotonView.Owner.NickName;
     }
 
     // Update is called once per frame

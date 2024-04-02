@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(CharacterController))]
-[RequireComponent(typeof(PhotonManager))]
+
 public class CharacterMoveAbility : CharacterAbility
 {
 
