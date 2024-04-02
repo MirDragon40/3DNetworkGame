@@ -6,6 +6,8 @@ public class ItemObjectFactory : MonoBehaviourPun
 {
     public static ItemObjectFactory Instance { get; private set; }
 
+    private ItemType itemType;
+
     private void Awake()
     {
         Instance = this;
@@ -29,6 +31,8 @@ public class ItemObjectFactory : MonoBehaviourPun
         Vector3 dropPos = position + new Vector3(0, 0.5f, 0f) + UnityEngine.Random.insideUnitSphere;
         PhotonNetwork.InstantiateRoomObject(type.ToString(), dropPos, Quaternion.identity);
     }
+
+  
 
     public void RequestDelete(int viewID)
     {

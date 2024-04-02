@@ -28,6 +28,7 @@ public class UI_RoomInfo : MonoBehaviourPunCallbacks
     }
     void Start()
     {
+
         if (!_init && PhotonNetwork.InRoom)
         {
             Init();
@@ -49,7 +50,9 @@ public class UI_RoomInfo : MonoBehaviourPunCallbacks
     {
         LogTextUI.text = _logText;
 
+
         PlayerCountTextUI.text = $"{PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
+
     }
 
     // 새로운 플레이어가 룸에 입장했을 때 호출되는 콜백 함수

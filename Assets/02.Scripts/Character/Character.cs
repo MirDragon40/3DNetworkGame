@@ -17,7 +17,7 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged
     private Vector3 _receivedPosition;
     private Quaternion _receivedRotation;
 
-    public int Score;
+    public int Score = 0;
 
 
 
@@ -153,12 +153,37 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged
         // 죽고나서 5초후 리스폰
         if (PhotonView.IsMine)
         {
-            // 팩토리 패턴: 
-            ItemObjectFactory.Instance.RequestCreate(ItemType.HealthPotion, transform.position);
-            ItemObjectFactory.Instance.RequestCreate(ItemType.StaminaPotion, transform.position);
+            DropItems();
 
             StartCoroutine(Death_Coroutine());
         }
+    }
+
+    
+
+    private void DropItems()
+    {
+        int randomValue = UnityEngine.Random.Range(0, 100);
+        if(randomValue > 30)  // 70%
+        {
+            int randomCount = UnityEngine.Random.Range(10, 30);
+            for (int i = 0; i < randomCount; ++i)
+            {
+                ItemObjectFactory.Instance.RequestCreate(ItemType.PointGem, transform.position);
+            }
+        }
+        else if (randomValue > 10)  //20%
+        {
+            ItemObjectFactory.Instance.RequestCreate(ItemType.HealthPotion, transform.position);
+
+        }
+        else
+        {
+            ItemObjectFactory.Instance.RequestCreate(ItemType.StaminaPotion, transform.position);
+
+        }
+        // 팩토리 패턴: 
+
     }
 
 

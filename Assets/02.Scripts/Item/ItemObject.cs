@@ -1,6 +1,7 @@
 using System;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.XR;
 
 [RequireComponent(typeof(PhotonView))]
 [RequireComponent(typeof(Collider))]
@@ -9,8 +10,20 @@ public class ItemObject : MonoBehaviourPun
     [Header("아이템 타입")]
     public ItemType ItemType;
     public float Value = 100;
-    public float GetPoint = 1;
 
+
+    private void Start()
+    {
+        if (photonView.IsMine)
+        {
+            Rigidbody rigidbody = GetComponent<Rigidbody>();
+            Vector3 randomVector = UnityEngine.Random.insideUnitSphere;
+            randomVector.y = 1f;
+            randomVector.Normalize();
+            randomVector *= UnityEngine.Random.Range(5, 10f);
+            rigidbody.AddForce(randomVector, ForceMode.Force);
+        }
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -40,6 +53,11 @@ public class ItemObject : MonoBehaviourPun
                     {
                         character.Stat.Stamina = character.Stat.MaxStamina;
                     }
+                    break;
+                }
+                case ItemType.PointGem:
+                {
+                    character.Score += (int)Value;
                     break;
                 }
             }
