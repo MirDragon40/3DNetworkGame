@@ -24,6 +24,7 @@ public class ItemObject : MonoBehaviourPun
             rigidbody.AddForce(randomVector, ForceMode.Force);
         }
     }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -34,6 +35,8 @@ public class ItemObject : MonoBehaviourPun
                 return;
             }
 
+            character.GetComponent<CharacterEffectAbility>().RequestPlay((int)ItemType);
+
             switch (ItemType)
             {
                 case ItemType.HealthPotion:
@@ -43,6 +46,7 @@ public class ItemObject : MonoBehaviourPun
                     {
                         character.Stat.Health = character.Stat.MaxHealth;
                     }
+                    PhotonNetwork.Instantiate("HitEffect", character.transform.position, Quaternion.identity);
                     break;
                 }
 
@@ -64,6 +68,7 @@ public class ItemObject : MonoBehaviourPun
 
             gameObject.SetActive(false);
             ItemObjectFactory.Instance.RequestDelete(photonView.ViewID);
+
         }
     }
 }

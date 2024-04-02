@@ -9,6 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Potion_Red
   m_Shader: {fileID: 4800000, guid: f99852a3460f1fd4a95553849ff3acc3, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords:
   - _EMISSION
@@ -18,6 +20,7 @@ Material:
   m_CustomRenderQueue: 3000
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -82,9 +85,9 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 0.07028256, b: 0, a: 1}
-    - _Colour: {r: 1, g: 0.21773234, b: 0, a: 1}
+    - _Colour: {r: 0.86415094, g: 0.21168868, b: 0.18750434, a: 1}
     - _EmissionColor: {r: 1, g: 0.30884862, b: 0, a: 1}
     - _FoamColor: {r: 1, g: 1, b: 1, a: 1}
-    - _RimColor: {r: 0.98039216, g: 0.41442415, b: 0.023529401, a: 1}
+    - _RimColor: {r: 0.98039216, g: 0.23245451, b: 0.023529401, a: 1}
     - _TopColor: {r: 1, g: 0.6557345, b: 0.5990566, a: 1}
   m_BuildTextureStacks: []
