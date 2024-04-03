@@ -22,6 +22,7 @@ public class ItemObject : MonoBehaviourPun
             randomVector.Normalize();
             randomVector *= UnityEngine.Random.Range(5, 10f);
             rigidbody.AddForce(randomVector, ForceMode.Force);
+            rigidbody.AddTorque(randomVector, ForceMode.Impulse);
         }
     }
 
@@ -49,7 +50,6 @@ public class ItemObject : MonoBehaviourPun
                     PhotonNetwork.Instantiate("HitEffect", character.transform.position, Quaternion.identity);
                     break;
                 }
-
                 case ItemType.StaminaPotion:
                 {
                     character.Stat.Stamina += Value;
@@ -59,9 +59,11 @@ public class ItemObject : MonoBehaviourPun
                     }
                     break;
                 }
-                case ItemType.PointGem:
+                case ItemType.PointGem100:
+                case ItemType.PointGem50:
+                case ItemType.PointGem30:
                 {
-                    // character.Score += 
+                    //character.Score += (int)Value;
                     character.AddScore((int)Value);
                     break;
                 }

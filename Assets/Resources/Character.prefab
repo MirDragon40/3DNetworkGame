@@ -5505,6 +5505,8 @@ MonoBehaviour:
   - {fileID: 6616283827417820659}
   - {fileID: 7494469501567417700}
   - {fileID: 2766279332100378536}
+  - {fileID: 2766279332100378536}
+  - {fileID: 2766279332100378536}
 --- !u!1 &1464849772754752282
 GameObject:
   m_ObjectHideFlags: 0
@@ -5516,6 +5518,7 @@ GameObject:
   - component: {fileID: 2726134507801990645}
   - component: {fileID: 2766279332100378536}
   - component: {fileID: 6311113347315147588}
+  - component: {fileID: 5659513477139408497}
   m_Layer: 0
   m_Name: GotScoreEffect
   m_TagString: Untagged
@@ -10346,6 +10349,28 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &5659513477139408497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1464849772754752282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &1471849779525954190
 GameObject:
   m_ObjectHideFlags: 0

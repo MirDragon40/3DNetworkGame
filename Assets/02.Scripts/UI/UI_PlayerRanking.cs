@@ -1,3 +1,4 @@
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using System;
@@ -23,6 +24,12 @@ public class UI_PlayerRanking : MonoBehaviourPunCallbacks
     {
         Refresh();
     }
+    // 플레이어의 커스텀 프로퍼티가 변경되면 호출되는 함수
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+        Refresh();
+    }
+    // 
     public override void OnJoinedRoom()
     {
         Refresh();
@@ -31,7 +38,15 @@ public class UI_PlayerRanking : MonoBehaviourPunCallbacks
     private void Refresh()
     {
         Dictionary<int, Player> players = PhotonNetwork.CurrentRoom.Players;
+
         List<Player> playerList = players.Values.ToList();
+        playerList.RemoveAll(player => !player.CustomProperties.ContainsKey("Score"));
+        playerList.Sort((player1, player2) =>
+        {
+            int player1Score = (int)player1.CustomProperties["Score"];
+            int player2Score = (int)player2.CustomProperties["Score"];
+            return player2Score.CompareTo(player1Score);
+        });
 
         int playerCount = Math.Min(playerList.Count, 5);
         foreach (UI_PlayerRankingSlot slot in Slots)

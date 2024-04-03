@@ -9691,7 +9691,7 @@ GameObject:
   - component: {fileID: 4883044691008389288}
   - component: {fileID: 3617049133430516804}
   m_Layer: 0
-  m_Name: GotScoreEffect
+  m_Name: GotScoreEffect100
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

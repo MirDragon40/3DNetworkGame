@@ -35,8 +35,33 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged
 
     private void Start()
     {
+        if (!PhotonView.IsMine)
+        {
+            return;
+        }
+
+        SetRandomPositionAndRotation();
+
+        /*[해쉬테이블]
+        ㄴ int Score     = 0;  
+        ㄴ int KillCount = 0;
+        ㄴ. 캐릭터.커스텀 프로퍼티 = 해쉬테이블<string, object>*/
+        ExitGames.Client.Photon.Hashtable hashtable = new ExitGames.Client.Photon.Hashtable();
+        hashtable.Add("Score", 0);
+        hashtable.Add("KillCount", 0);
+        PhotonNetwork.LocalPlayer.SetCustomProperties(hashtable);
+
         SetRandomPositionAndRotation();
     }
+
+    public void AddScore(int score)
+    {
+        ExitGames.Client.Photon.Hashtable myHashtable = PhotonNetwork.LocalPlayer.CustomProperties;
+        myHashtable["Score"] = (int)myHashtable["Score"] + score;
+        PhotonNetwork.LocalPlayer.SetCustomProperties(myHashtable);
+
+    }
+
 
     private void Update()
     {
@@ -158,17 +183,17 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged
         }
     }
 
-    
+
 
     private void DropItems()
     {
         int randomValue = UnityEngine.Random.Range(0, 100);
-        if(randomValue > 30)  // 70%
+        if (randomValue > 30)  // 70%
         {
             int randomCount = UnityEngine.Random.Range(10, 30);
             for (int i = 0; i < randomCount; ++i)
             {
-                ItemObjectFactory.Instance.RequestCreate(ItemType.PointGem, transform.position);
+                ItemObjectFactory.Instance.RequestCreate(ItemType.PointGem100, transform.position);
             }
         }
         else if (randomValue > 10)  //20%
