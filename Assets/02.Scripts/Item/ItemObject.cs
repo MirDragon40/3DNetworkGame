@@ -61,7 +61,8 @@ public class ItemObject : MonoBehaviourPun
                 }
                 case ItemType.PointGem:
                 {
-                    character.Score += (int)Value;
+                    // character.Score += 
+                    character.AddScore((int)Value);
                     break;
                 }
             }

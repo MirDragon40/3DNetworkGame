@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 3872038494898969392}
   - component: {fileID: 5011066720518862399}
   m_Layer: 0
-  m_Name: PointGem
+  m_Name: PointGem100
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
