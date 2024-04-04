@@ -24,6 +24,7 @@ public class ItemObjectFactory : MonoBehaviourPun
         return Create(type, position);
     }
 
+ 
     public void RequestCreate(ItemType type, Vector3 position)
     {
         if (PhotonNetwork.IsMasterClient)

@@ -22,8 +22,17 @@ public class CharacterAttackAbility : CharacterAbility
     private float _attackTimer = 0;
 
     public Collider WeaponCollider;
+    public GameObject WeaponObject;
 
-    private CharacterController _characterController;
+
+    public void RefreshWeaponScale()
+    {
+        int score = _owner.GetPropertyIntValue("Score");
+        float scale = 1f;
+        scale += (score / 100) * 0.1f;
+
+        WeaponObject.transform.localScale = new Vector3(scale, scale, scale);
+    }
 
 
     // 때린 애들을 기억해놓는 리스트
@@ -32,7 +41,6 @@ public class CharacterAttackAbility : CharacterAbility
     void Start()
     {
         _animator = GetComponent<Animator>();
-        _characterController = GetComponent<CharacterController>();
     }
 
     private void Update()

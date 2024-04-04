@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 [RequireComponent(typeof(CharacterMoveAbility))]
 [RequireComponent(typeof(CharacterRotateAbility))]
@@ -19,6 +21,7 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged
 
     public int Score = 0;
 
+    private int _halfScore;
 
 
     private void Awake()
@@ -51,15 +54,33 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged
         hashtable.Add("KillCount", 0);
         PhotonNetwork.LocalPlayer.SetCustomProperties(hashtable);
 
-        SetRandomPositionAndRotation();
     }
 
-    public void AddScore(int score)
+    [PunRPC]
+    public void AddPropertyIntValue(string key, int value)
     {
         ExitGames.Client.Photon.Hashtable myHashtable = PhotonNetwork.LocalPlayer.CustomProperties;
-        myHashtable["Score"] = (int)myHashtable["Score"] + score;
+        myHashtable[key] = (int)myHashtable[key] + value;
         PhotonNetwork.LocalPlayer.SetCustomProperties(myHashtable);
+        GetComponent<CharacterAttackAbility>().RefreshWeaponScale();
+    }
 
+    // 주어진 데이터를 바꾸는 메서드
+    [PunRPC]
+    public void SetPropertyIntValue(string key, int value)
+    {
+        ExitGames.Client.Photon.Hashtable myHashtable = PhotonNetwork.LocalPlayer.CustomProperties;
+        myHashtable[key] = value;
+        PhotonNetwork.LocalPlayer.SetCustomProperties(myHashtable);
+        GetComponent<CharacterAttackAbility>().RefreshWeaponScale();
+
+    }
+
+    [PunRPC]
+    public int GetPropertyIntValue(string key)
+    {
+        ExitGames.Client.Photon.Hashtable myHashtable = PhotonNetwork.LocalPlayer.CustomProperties;
+        return (int)myHashtable[key];
     }
 
 
@@ -136,11 +157,19 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged
 
     private void OnDeath(int actorNumber)
     {
+        _halfScore = GetPropertyIntValue("Score");
+        SetPropertyIntValue("Score", 0);
+
         if (actorNumber >= 0)
         {
             string nickname = PhotonNetwork.CurrentRoom.GetPlayer(actorNumber).NickName;
             string logMessage = $"\n{nickname}님이 {PhotonView.Owner.NickName}을 처치하였습니다.";
             PhotonView.RPC(nameof(AddLog), RpcTarget.All, logMessage);
+
+            Player targetPlayer = PhotonNetwork.CurrentRoom.GetPlayer(actorNumber);
+            PhotonView.RPC(nameof(AddPropertyIntValue), targetPlayer, "Score", _halfScore);
+            PhotonView.RPC(nameof(AddPropertyIntValue), targetPlayer, "KillCount", 1);
+
         }
         else
         {
@@ -190,7 +219,7 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged
         int randomValue = UnityEngine.Random.Range(0, 100);
         if (randomValue > 30)  // 70%
         {
-            int randomCount = UnityEngine.Random.Range(10, 30);
+            int randomCount = _halfScore / 100;
             for (int i = 0; i < randomCount; ++i)
             {
                 ItemObjectFactory.Instance.RequestCreate(ItemType.PointGem100, transform.position);
@@ -207,7 +236,6 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged
 
         }
         // 팩토리 패턴: 
-
     }
 
 
@@ -236,23 +264,6 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged
 
         GetComponent<Animator>().SetTrigger("Live");
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

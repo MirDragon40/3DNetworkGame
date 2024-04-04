@@ -59,5 +59,6 @@ public class UI_PlayerRanking : MonoBehaviourPunCallbacks
             Slots[i].Set(playerList[i]);
         }
     }
+   
 }
 
