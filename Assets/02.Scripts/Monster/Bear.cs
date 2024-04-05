@@ -1,119 +1,190 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum MonsterState
-{
-    Idle,
-    Trace,
-    Attack,
-    Comeback,
-    Damaged,
-    Die,
-    Patrol
-}
-
 public class Bear : MonoBehaviour
 {
-    [Range(0, 100)]
-    public int Health;
-    public int MaxHealth = 100;
+    // 곰 상태 상수(열거형)
+    public enum BearState
+    {
+        Idle,
+        Patrol,
+        Trace,
+        Return,
+        Damaged,
+        Death
+    }
 
+    private BearState _state = BearState.Idle;
 
-    /***********************************************************/
-    private NavMeshAgent _navMeshAgent;
-    private Animator _animator;
+    public Animator MyAnimatior;
+    public NavMeshAgent Agent;
 
-    private Transform _target;
-    public float FindDistance = 5f;    // 감지 범위
-    public float AttackDistance = 2f;  // 공격 범위
-    public float MoveSpeed = 3f;   // 몬스터의 이동속도
-    public Vector3 StartPosition;  // 시작 위치
-    public float MoveDistance = 10f;  // 움직일 수 있는 거리
-    public const float TOLERANCE = 0.1f;  // 허용 오차 (관용)
-    public int Damage = 10;
-    public const float AttackDelay = 1f;
-    private float _attackTimer = 0f;
+    private List<Character> _characterList = new List<Character>();
+    public SphereCollider CharacterDetectCollider;
+    private Character _targetCharacter;
 
-    private Vector3 _knockbackStartPosition;
-    private Vector3 _knockbackEndPosition;
-    private float KNOCKBACK_DURATION = 0.1f;
-    private float _knockbackPrograss = 0f;
-    public float KnockbackPower = 1.2f;
+    public Stat Stat;
 
-    private const float IDLE_DURATION = 3f;
-    public Transform PatrolTarget;
-    private float _idleTimer = 0f;
+    // [Idle]
+    public float TraceDetectRange = 5f;
+    public float IdleMaxTime = 5f;
+    private float _idleTime = 0f;
 
-    private MonsterState _currentState = MonsterState.Idle;
+    // [Patrol]
+    public Transform PatrolDestination;
 
+    // [Return]
+    private Vector3 _startPosition;
 
     private void Start()
     {
-        _navMeshAgent = GetComponent<NavMeshAgent>();
-        _navMeshAgent.speed = MoveSpeed;
+        Agent.speed = Stat.MoveSpeed;
 
-        _animator = GetComponent<Animator>();
+        _startPosition = transform.position;
 
-        _target = GameObject.FindGameObjectWithTag("Player").transform;
-
-        StartPosition = _target.position;
-
-
+        CharacterDetectCollider.radius = TraceDetectRange;
     }
 
-    private void Update()
+    private void OnTriggerEnter(Collider col)
     {
-        switch (_currentState)
+        if (col.CompareTag("Player"))
         {
-            case MonsterState.Idle:
-                Idle();
-                break;
+            Character character = col.GetComponent<Character>();
+            if (!_characterList.Contains(character))
+            {
+                Debug.Log("새로운 인간을 찾았다!");
+                _characterList.Add(character);  
+            }
         }
     }
-    
+
+
+    // 매 프레임마다 해당 상태별로 정해진 행동을 한다.
+    private void Update()
+    {
+        // 조기 반환
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            return;
+        }
+
+        switch (_state)
+        {
+            case BearState.Idle:
+            {
+                Idle();
+                break;
+            }
+
+            case BearState.Patrol:
+            {
+                Patrol();
+                break;
+            }
+
+            case BearState.Return:
+            {
+                Return(); 
+                break;
+            }
+        }
+    }
 
     private void Idle()
     {
-        _idleTimer += Time.deltaTime;
-        if (PatrolTarget != null && _idleTimer >= IDLE_DURATION)
+        
+
+        // 그러다가.. [대기 시간]이 너무 많으면 (정찰 상태로 전이)
+        _idleTime += Time.deltaTime;
+        if (_idleTime >= IdleMaxTime)
         {
-            _idleTimer = 0f;
-            Debug.Log("상태 전환: Idle -> Patrol");
-            _animator.SetTrigger("IdleToPatrol");
-            _currentState = MonsterState.Patrol;
+            _idleTime = 0f;
+            _state = BearState.Patrol;
+            MyAnimatior.Play("Run");
+            Debug.Log("Idle -> Patrol");
         }
 
-        if (Vector3.Distance(_target.position, transform.position) < FindDistance)
+        // 그러다가.. [플레이어]가 [감지 범위]안에 들어오면 플레이어 (추적 상태로 전이)
+        if (_targetCharacter == null)
         {
-            Debug.Log("상태 전환: Idle -> trace");
-            _animator.SetTrigger("IdleToTrace");
-            _currentState = MonsterState.Trace;
+            return;
+        }
+        Vector3 targetPosition = _targetCharacter.transform.position;
+        Vector3 myPosition = transform.position;
+        if (Vector3.Distance(targetPosition, myPosition) <= TraceDetectRange)
+        {
+            _state = BearState.Trace;
+            MyAnimatior.Play("Run");
+            Debug.Log("Idle -> Trace");
         }
     }
 
-
-    private void Trace()
+    private void Patrol()
     {
-        Vector3 _dir = _target.transform.position - this.transform.position;
-        _dir.y = 0;
-        _dir.Normalize();
-
-        if (Vector3.Distance(transform.position, StartPosition) >= MoveDistance )
+        if (PatrolDestination == null)
         {
-            Debug.Log("상태전환: Trace -> ComeBack ");
-            _animator.SetTrigger("TraceToComeback");
-            _currentState = MonsterState.Comeback;
+            PatrolDestination = GameObject.Find("Patrol").transform;
         }
 
-        if (Vector3.Distance(_target.position, transform.position) <= AttackDistance )
-        {
-            Debug.Log("상태전환: Trace -> Attack");
-            _animator.SetTrigger("TraceToAttack");
-            _currentState = MonsterState.Attack;
+        // [패트롤 구역]까지 간다.
+        Agent.destination = PatrolDestination.position;
+        Agent.stoppingDistance = 0f;
+        // todo: 네비게이션
 
+        // IF [플레이어]가 [감지 범위]안에 들어오면 플레이어 (추적 상태로 전이)
+        Vector3 myPosition = transform.position;
+        if (_targetCharacter == null)
+        {
+            Vector3 targetPosition = _targetCharacter.transform.position;
+            if (Vector3.Distance(targetPosition, myPosition) <= TraceDetectRange)
+            {
+                _state = BearState.Trace;
+                MyAnimatior.Play("Trace");
+                Debug.Log("Patrol -> Trace");
+            }
+        }
+      
+
+        // IF [패트롤 구역]에 도착하면 (복귀 상태로 전이)
+        if (Vector3.Distance(PatrolDestination.position, myPosition) <= 0.3f)
+        {
+            _state = BearState.Return;
+            MyAnimatior.Play("Idle");
+            Debug.Log("Patrol -> Return");
+        }
+    }
+
+    private void Return()
+    {
+        // [시작 위치]까지 간다.
+        Agent.destination = _startPosition;
+        Agent.stoppingDistance = 0f;
+
+        Vector3 myPosition = transform.position;
+        if (!Agent.pathPending && Vector3.Distance(_startPosition, myPosition) <= 0.1f)  // 거리가 멀어 안맞을 수도 있기 때문에 pathPending  추가, 목적지가 안 정해졌음을 의미
+        {
+            _state = BearState.Idle;
+            MyAnimatior.Play("Idle");
+            Debug.Log("Patrol -> Return");
+        }
+    }
+
+    // 나와의 거리가 distance보다 짧은 플레이어를 반환
+    private Character FindTarget(float distance)
+    {
+        Vector3 myPosition = transform.position;
+        foreach(Character character in _characterList)
+        {
+            if(Vector3.Distance(character.transform.position, myPosition) <= distance)
+            {
+                return character;
+            }
         }
 
-
+        return null;
     }
 }
