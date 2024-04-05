@@ -25687,6 +25687,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4378076591189223801, guid: 32de2459bb2a475409777959629e27c1, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4468692384115929696, guid: 32de2459bb2a475409777959629e27c1, type: 3}
       propertyPath: m_Name
       value: Bear
@@ -25714,14 +25718,6 @@ PrefabInstance:
     - target: {fileID: 7113655105373779271, guid: 32de2459bb2a475409777959629e27c1, type: 3}
       propertyPath: Stat.Health
       value: 1000
-      objectReference: {fileID: 0}
-    - target: {fileID: 7113655105373779271, guid: 32de2459bb2a475409777959629e27c1, type: 3}
-      propertyPath: PatrolTarget
-      value: 
-      objectReference: {fileID: 545300226}
-    - target: {fileID: 7113655105373779271, guid: 32de2459bb2a475409777959629e27c1, type: 3}
-      propertyPath: Stat.Stamina
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7113655105373779271, guid: 32de2459bb2a475409777959629e27c1, type: 3}
       propertyPath: Stat.RunSpeed
@@ -25756,6 +25752,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7113655105373779271, guid: 32de2459bb2a475409777959629e27c1, type: 3}
+      propertyPath: CharacterDetectCollider
+      value: 
+      objectReference: {fileID: 8650679568282922933}
+    - target: {fileID: 7113655105373779271, guid: 32de2459bb2a475409777959629e27c1, type: 3}
       propertyPath: Stat.JumpConsumeStamina
       value: 0
       objectReference: {fileID: 0}
@@ -25766,10 +25766,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4468692384115929696, guid: 32de2459bb2a475409777959629e27c1, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8650679568282922933}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 32de2459bb2a475409777959629e27c1, type: 3}
 --- !u!222 &2193433285549074577
 CanvasRenderer:
@@ -26025,11 +26022,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &2713030939725148017 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4468692384115929696, guid: 32de2459bb2a475409777959629e27c1, type: 3}
-  m_PrefabInstance: {fileID: 2163124933037395886}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2729874884213125326
 GameObject:
   m_ObjectHideFlags: 0
@@ -28332,27 +28324,11 @@ NavMeshAgent:
   m_CorrespondingSourceObject: {fileID: 2454643132008494436, guid: 32de2459bb2a475409777959629e27c1, type: 3}
   m_PrefabInstance: {fileID: 2163124933037395886}
   m_PrefabAsset: {fileID: 0}
---- !u!135 &8650679568282922933
+--- !u!135 &8650679568282922933 stripped
 SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 4378076591189223801, guid: 32de2459bb2a475409777959629e27c1, type: 3}
+  m_PrefabInstance: {fileID: 2163124933037395886}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2713030939725148017}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 10
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!222 &8658904586420240430
 CanvasRenderer:
   m_ObjectHideFlags: 0

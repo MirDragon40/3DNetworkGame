@@ -1,8 +1,7 @@
-
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
-
-public class BattleScene : MonoBehaviour
+public class BattleScene : MonoBehaviourPunCallbacks
 {
     public static BattleScene Instance { get; private set; }
 
@@ -19,5 +18,18 @@ public class BattleScene : MonoBehaviour
         return SpawnPoints[randomIndex].position;
     }
 
+    public override void OnJoinedRoom()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            return;
+        }
+
+        GameObject[] points = GameObject.FindGameObjectsWithTag("BearSpawnPoint");
+        foreach (GameObject point in points)
+        {
+            PhotonNetwork.InstantiateRoomObject("Bear", point.transform.position, Quaternion.identity);
+        }
+    }
 
 }
