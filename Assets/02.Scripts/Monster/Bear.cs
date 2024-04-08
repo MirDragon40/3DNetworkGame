@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Photon.Pun;
+using UnityEditor.Timeline.Actions;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
-public class Bear : MonoBehaviour
+public class Bear : MonoBehaviour, IPunObservable, IDamaged    // 포톤이 관찰하는 대상
 {
     // 곰 상태 상수(열거형)
     public enum BearState
@@ -18,6 +20,9 @@ public class Bear : MonoBehaviour
         Hit,
         Death,
     }
+
+    public Canvas MyCanvas;
+    public Slider HealthSliderUI;
 
     private BearState _state = BearState.Idle;
 
@@ -53,6 +58,8 @@ public class Bear : MonoBehaviour
         _startPosition = transform.position;
 
         CharacterDetectCollider.radius = TraceDetectRange;
+
+        Stat.Init();
     }
 
     private void OnTriggerEnter(Collider col)
@@ -68,11 +75,29 @@ public class Bear : MonoBehaviour
         }
     }
 
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        // 데이터 동기화 해야할 것: 체력, 상태
+        if (stream.IsWriting)
+        {
+            stream.SendNext(Stat.Health);
+            stream.SendNext(_state);
+        }
+        else if (stream.IsReading)
+        {
+            Stat.Health = (int)stream.ReceiveNext();
+            _state = (BearState)stream.ReceiveNext();
+        }
+    }
 
     // 매 프레임마다 해당 상태별로 정해진 행동을 한다.
     private void Update()
     {
+        MyCanvas.transform.forward = Camera.main.transform.forward;
+        HealthSliderUI.value = (float)Stat.Health / Stat.MaxHealth;
+
         // 조기 반환
+        // 방장만이 할 수 있는거
         if (!PhotonNetwork.IsMasterClient)
         {
             return;
@@ -107,6 +132,18 @@ public class Bear : MonoBehaviour
             case BearState.Attack:
             {
                 Attack();
+                break;
+            }
+
+            case BearState.Hit:
+            {
+                Hit(Stat.Damage);
+                break;
+            }
+
+            case BearState.Death:
+            {
+                Death();
                 break;
             }
         }
@@ -254,13 +291,53 @@ public class Bear : MonoBehaviour
         if (_attackTimer >= Stat.AttackCoolTime)
         {
             transform.LookAt(_targetCharacter.transform);
-
             _attackTimer = 0f;
+            AttackAction();
             RequestPlayAnimation("Attack");
         }
     }
 
+    private void Hit(int damage)
+    {
+        Damaged(damage, 0);
+    }
 
+    [PunRPC]
+    public void Damaged(int damage, int actorNumber)
+    {
+        if(_state == BearState.Death || !PhotonNetwork.IsMasterClient)
+        {
+            return;
+        }
+
+        Stat.Health -= damage;
+
+
+        if (Stat.Health <= 0)
+        {
+            Death();
+        }
+        else
+        {
+            PlayAnimation("Hit");
+
+        }
+    }
+
+    private void Death()
+    {
+        _state = BearState.Death;
+        PlayAnimation("Death");
+
+        // 3초 후 삭제
+        StartCoroutine(Death_Coroutine());
+    }
+
+    private IEnumerator Death_Coroutine()
+    {
+        yield return new WaitForSeconds(3f);
+        PhotonNetwork.Destroy(gameObject);
+    }
 
     // 나와의 거리가 distance보다 짧은 플레이어를 반환
     private Character FindTarget(float distance)
@@ -283,6 +360,7 @@ public class Bear : MonoBehaviour
 
         return null;
     }
+
     private List<Character> FindTargets(float distance)
     {
         _characterList.RemoveAll(c => c == null);
@@ -332,6 +410,7 @@ public class Bear : MonoBehaviour
             if (Vector3.Angle(transform.forward, dir) < viewAngle)
             {
                 target.PhotonView.RPC("Damaged", RpcTarget.All, Stat.Damage, -1);
+                Debug.Log("플레이어가 곰에 맞았다.");
             }
 
         }

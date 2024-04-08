@@ -86,7 +86,6 @@ public class CharacterMoveAbility : CharacterAbility
         {
             _yVelocity = _owner.Stat.JumpPower;
             _owner.Stat.Stamina -= _owner.Stat.JumpConsumeStamina;
-
         }
     }
 

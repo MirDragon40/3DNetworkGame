@@ -3620,7 +3620,7 @@ GameObject:
   - component: {fileID: 353387972}
   m_Layer: 0
   m_Name: BearSpawnPoint (2)
-  m_TagString: Untagged
+  m_TagString: BearSpawnPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6973,7 +6973,7 @@ GameObject:
   - component: {fileID: 639280836}
   m_Layer: 0
   m_Name: BearSpawnPoint (1)
-  m_TagString: Untagged
+  m_TagString: BearSpawnPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12923,7 +12923,7 @@ GameObject:
   - component: {fileID: 1122700698}
   m_Layer: 0
   m_Name: BearSpawnPoint
-  m_TagString: Untagged
+  m_TagString: BearSpawnPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -17501,7 +17501,7 @@ GameObject:
   - component: {fileID: 1521031969}
   m_Layer: 0
   m_Name: BearSpawnPoints
-  m_TagString: BearSpawnPoint
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
