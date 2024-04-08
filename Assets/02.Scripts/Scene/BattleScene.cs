@@ -7,6 +7,8 @@ public class BattleScene : MonoBehaviourPunCallbacks
 
     public List<Transform> SpawnPoints;
 
+    private bool _init = false;
+
     private void Awake()
     {
         Instance = this;
@@ -18,8 +20,20 @@ public class BattleScene : MonoBehaviourPunCallbacks
         return SpawnPoints[randomIndex].position;
     }
 
-    public override void OnJoinedRoom()
+    private void Start()
     {
+        if (!_init)
+        {
+            Init();
+        }
+    }
+
+    public void Init()
+    {
+        _init = true;
+
+        PhotonNetwork.Instantiate(nameof(Character), Vector3.zero, Quaternion.identity);
+
         if (!PhotonNetwork.IsMasterClient)
         {
             return;
@@ -30,6 +44,11 @@ public class BattleScene : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.InstantiateRoomObject("Bear", point.transform.position, Quaternion.identity);
         }
+
+    }
+
+    public override void OnJoinedRoom()
+    {
     }
 
 }
