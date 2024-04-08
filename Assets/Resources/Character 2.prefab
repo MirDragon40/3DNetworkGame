@@ -71382,7 +71382,7 @@ GameObject:
   - component: {fileID: 7090972583369724237}
   - component: {fileID: 4404197182738807923}
   m_Layer: 6
-  m_Name: FemaleCharacter
+  m_Name: Character 2
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -71420,7 +71420,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 8fc37da341d25ee45b104021bb1c7a44, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 

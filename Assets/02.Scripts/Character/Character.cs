@@ -192,7 +192,7 @@ public class Character : MonoBehaviour, IPunObservable, IDamaged
         }
         UI_DamagedEffect.Instance.Show(0.5f);
     }
-
+    
     [PunRPC]
     private void Death()
     {
