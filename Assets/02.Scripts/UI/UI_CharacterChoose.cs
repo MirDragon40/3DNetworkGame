@@ -7,13 +7,21 @@ using UnityEngine.UI;
 public class UI_CharacterChoose : MonoBehaviour
 {
 
-    private bool _isFemaleCharacter = true;
+    public static UI_CharacterChoose Instance { get; private set; }
+
+    public bool _isFemaleCharacter = true;
 
     public Image Image_Female;
     public Image Image_Male;
 
     public GameObject Character_Male;
     public GameObject Character_Female;
+
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
