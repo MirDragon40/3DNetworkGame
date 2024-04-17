@@ -32,7 +32,12 @@ public class BattleScene : MonoBehaviourPunCallbacks
     {
         _init = true;
 
-        PhotonNetwork.Instantiate(nameof(Character), Vector3.zero, Quaternion.identity);
+        // Character_Male
+        // Character_Female
+        PhotonNetwork.Instantiate($"Character_{UI_Lobby.SelectedCharacterType}", Vector3.zero, Quaternion.identity);
+
+
+       // PhotonNetwork.Instantiate(nameof(Character), Vector3.zero, Quaternion.identity);
 
         if (!PhotonNetwork.IsMasterClient)
         {

@@ -6,10 +6,9 @@ using UnityEngine.UI;
 
 public class UI_CharacterChoose : MonoBehaviour
 {
+    public static CharacterType SelectedCharacterType = CharacterType.Female;
 
-    public static UI_CharacterChoose Instance { get; private set; }
 
-    public bool _isFemaleCharacter = true;
 
     public Image Image_Female;
     public Image Image_Male;
@@ -18,74 +17,50 @@ public class UI_CharacterChoose : MonoBehaviour
     public GameObject Character_Female;
 
 
-    private void Awake()
-    {
-        Instance = this;
-    }
-
+  
     private void Start()
     {
-        _isFemaleCharacter = true;
+        Refresh();
+    }
 
-        Image_Female.enabled = true;
-        Image_Male.enabled = false;
+    private void Refresh()
+    {
+        Image_Female.enabled = SelectedCharacterType == CharacterType.Female;
+        Image_Male.enabled = SelectedCharacterType == CharacterType.Male;
 
-        Character_Female.SetActive(true);
-        Character_Male.SetActive(false);
-
+        Character_Female.SetActive(SelectedCharacterType == CharacterType.Female);
+        Character_Male.SetActive(SelectedCharacterType == CharacterType.Male);
     }
 
     public void OnLeftButton()
     {
-        if(_isFemaleCharacter)
+        int order = (int)SelectedCharacterType;
+        order -= 1;
+        if(order < 0)
         {
-            _isFemaleCharacter = false;
-
-            Image_Female.enabled = false;
-            Image_Male.enabled = true;
-
-            Character_Female.SetActive(false);
-            Character_Male.SetActive(true);
-
+            order = (int)CharacterType.Count - 1;
         }
-        else
-        {
-            _isFemaleCharacter = true;
 
-            Image_Female.enabled = true;
-            Image_Male.enabled = false;
 
-            Character_Female.SetActive(true);
-            Character_Male.SetActive(false);
+        SelectedCharacterType = (CharacterType)order;
 
-        }
+     
+        Refresh();
     }
-    
+
     public void OnRightButton()
     {
-
-        if (_isFemaleCharacter)
+        int order = (int)SelectedCharacterType;
+        order += 1;
+        if (order >= (int)CharacterType.Count)
         {
-            _isFemaleCharacter = false;
-
-            Image_Female.enabled = false;
-            Image_Male.enabled = true;
-
-            Character_Female.SetActive(false);
-            Character_Male.SetActive(true);
-
+            order = 0;
         }
-        else
-        {
-            _isFemaleCharacter = true;
 
-            Image_Female.enabled = true;
-            Image_Male.enabled = false;
+        SelectedCharacterType = (CharacterType)order;
 
-            Character_Female.SetActive(true);
-            Character_Male.SetActive(false);
 
-        }
+        Refresh();
     }
 
 

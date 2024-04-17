@@ -26,7 +26,7 @@ public class CharacterChangeAbility : MonoBehaviour
 
     private void Start()
     {
-        if (UI_CharacterChoose.Instance._isFemaleCharacter)
+        if (UI_CharacterChoose.SelectedCharacterType == CharacterType.Female)
         {
             Body05.SetActive(false);
             Cloak02.SetActive(false);
