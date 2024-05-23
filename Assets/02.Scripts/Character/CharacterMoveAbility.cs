@@ -12,7 +12,7 @@ public class CharacterMoveAbility : CharacterAbility
 
 
     private float _gravity = -9.8f;  // 중력 변수
-    private float _yVelocity = -1f;
+    private float _yVelocity = 0f;
 
     private CharacterController _characterController;
     private Animator _animator;
@@ -55,9 +55,11 @@ public class CharacterMoveAbility : CharacterAbility
 
 
 
-        // 3. 중력 적용하세요.
+
+        // 중력
         _yVelocity += _gravity * Time.deltaTime;
         dir.y = _yVelocity;
+
 
 
         // 과제 5. 스테미나 구현하기 
